@@ -1,0 +1,21 @@
+{
+  "name": "portfolio-oussama",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Portfolio of Hacini Mohammed Oussama — Backend Software Engineer",
+  "scripts": {
+    "dev": "npx -y serve .",
+    "dev:https": "npx -y local-ssl-proxy --source 3443 --target 3000",
+    "start": "npx -y serve ."
+  },
+  "keywords": [
+    "portfolio",
+    "vue",
+    "backend-engineer",
+    "python",
+    "django",
+    "fastapi",
+    "postgresql"
+  ],
+  "author": "Hacini Mohammed Oussama"
+}
