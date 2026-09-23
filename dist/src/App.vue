@@ -1,11 +1,17 @@
 <template>
   <div class="app-root">
     <!-- Fixed Navigation -->
-    <Navbar :whatsapp-url="portfolioData.identity.socials.whatsapp" />
+    <Navbar 
+      :whatsapp-url="portfolioData.identity.socials.whatsapp" 
+      @download-cv="showComingSoon"
+    />
 
     <!-- Main Content -->
     <main>
-      <HeroSection :identity="portfolioData.identity" />
+      <HeroSection 
+        :identity="portfolioData.identity" 
+        @download-cv="showComingSoon"
+      />
       <AboutSection :about="portfolioData.about" />
       <ProjectsSection :projects="portfolioData.projects" />
       <SkillsSection :skill-categories="portfolioData.skillCategories" />
@@ -29,6 +35,36 @@
         </svg>
       </button>
     </transition>
+
+    <!-- Toast Notification: Coming Soon -->
+    <transition name="toast">
+      <div 
+        v-if="toastVisible" 
+        class="toast-notification" 
+        role="status" 
+        aria-live="polite"
+      >
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <div class="toast-body">
+          <p class="toast-title">This option is coming soon</p>
+          <p class="toast-desc">The downloadable Word CV is currently being prepared.</p>
+        </div>
+        <button 
+          class="toast-close" 
+          @click="toastVisible = false" 
+          aria-label="Close notification"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -46,6 +82,16 @@ import ContactSection from './components/ContactSection.vue'
 import Footer from './components/Footer.vue'
 
 const showFloatingTop = ref(false)
+const toastVisible = ref(false)
+let toastTimer = null
+
+const showComingSoon = () => {
+  toastVisible.value = true
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastVisible.value = false
+  }, 3500)
+}
 
 const handleScroll = () => {
   showFloatingTop.value = window.scrollY > 400
@@ -61,6 +107,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  if (toastTimer) clearTimeout(toastTimer)
 })
 </script>
 

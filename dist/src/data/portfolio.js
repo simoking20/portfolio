@@ -2,10 +2,11 @@ const portfolioData = {
   identity: {
     name: "Hacini Mohammed Oussama",
     shortName: "Oussama",
-    title: "Backend Software Engineer",
+    title: "Backend Engineer · Full-Stack Engineer · Software Engineer",
     tagline: "Architecting resilient APIs, scalable microservices, and reliable database systems.",
     location: "Ouargla, Algeria",
     availability: "Available for backend opportunities & collaborations",
+    cvFile: "./Hacini_Mohammed_Oussama_CV.docx",
     socials: {
       github: "https://github.com/simoking20",
       linkedin: "https://www.linkedin.com/in/mohammed-oussama-hacini-858421271/",
@@ -15,8 +16,8 @@ const portfolioData = {
 
   about: {
     bio: [
-      "I am a passionate Backend Software Engineer from Ouargla, Algeria, specializing in designing clean, high-concurrency server architectures, robust REST & GraphQL APIs, and optimized relational databases.",
-      "Currently pursuing my Master's degree in Computer Science at Kasdi Merbah University Ouargla, I blend academic rigor with real-world startup engineering experience. Having founded and contributed to multiple production platforms, I thrive on turning complex problem spaces into reliable, performant software."
+      "I am a passionate Backend & Full-Stack Engineer from Ouargla, Algeria, specializing in designing clean, high-concurrency server architectures, robust REST & GraphQL APIs, and optimized relational databases.",
+      "Currently pursuing my Master's degree in Computer Science at Kasdi Merbah University Ouargla, I blend academic rigor with real-world engineering experience. Having built production platforms from scratch including an internal CRM for up to 200 daily users, I thrive on turning complex problem spaces into reliable, high-performance software."
     ],
     stats: [
       {
@@ -25,9 +26,9 @@ const portfolioData = {
         subtext: "Designing backend services & databases"
       },
       {
-        value: "3",
+        value: "4",
         label: "Featured Products",
-        subtext: "Startups & production platforms"
+        subtext: "Production CRM, startups & platforms"
       },
       {
         value: "M.Sc",
@@ -59,6 +60,27 @@ const portfolioData = {
 
   projects: [
     {
+      id: "team-crm",
+      title: "Team CRM System",
+      role: "Lead Developer",
+      period: "2025 – Present",
+      isFlagship: true,
+      badge: "Enterprise CRM / 50–200 Daily Users",
+      description:
+        "Full-featured internal CRM system built from scratch supporting 50–200 daily active users with complete customer lifecycle workflows and background automation.",
+      highlights: [
+        "Architected core backend with Django and DRF: accounts, contacts, deal pipelines, activities, tasks, and automation",
+        "Integrated Redis and Celery for asynchronous background tasks, event processing, and scheduled workflows",
+        "Engineered robust PostgreSQL database schema with indexing tailored for daily transactional throughput",
+        "Deployed and orchestrated multi-container architecture using Docker Compose"
+      ],
+      stack: ["Django", "DRF", "PostgreSQL", "Redis", "Celery", "Docker Compose"],
+      links: {
+        github: "https://github.com/simoking20",
+        external: null
+      }
+    },
+    {
       id: "padar",
       title: "PADAR",
       role: "Founder & Lead Developer",
@@ -69,7 +91,7 @@ const portfolioData = {
         "Comprehensive digital platform engineered for road accident data reporting, real-time tracking, and analytics to support data-driven municipal interventions.",
       highlights: [
         "Architected scalable backend with Django and GraphQL API schemas for complex relational accident reports",
-        "Implemented secure JWT authentication and granular role-based access control",
+        "Implemented secure JWT authentication and granular role-based access control (RBAC)",
         "Configured robust containerized environments using Docker and automated CI/CD deployment pipelines",
         "Optimized PostgreSQL schema for spatial and chronological accident pattern analytics"
       ],
@@ -136,6 +158,7 @@ const portfolioData = {
       category: "Frameworks",
       skills: [
         { name: "Django", isLearning: false },
+        { name: "DRF", isLearning: false },
         { name: "FastAPI", isLearning: false },
         { name: "Flask", isLearning: false },
         { name: "Ruby on Rails", isLearning: true }
@@ -146,7 +169,8 @@ const portfolioData = {
       skills: [
         { name: "PostgreSQL", isLearning: false },
         { name: "MySQL", isLearning: false },
-        { name: "SQLite", isLearning: false }
+        { name: "SQLite", isLearning: false },
+        { name: "Redis", isLearning: false }
       ]
     },
     {
@@ -154,20 +178,24 @@ const portfolioData = {
       skills: [
         { name: "GraphQL", isLearning: false },
         { name: "REST", isLearning: false },
-        { name: "JWT", isLearning: false }
+        { name: "JWT", isLearning: false },
+        { name: "OAuth2", isLearning: false }
       ]
     },
     {
       category: "Architecture",
       skills: [
         { name: "Microservices", isLearning: false },
-        { name: "Monolith", isLearning: false }
+        { name: "Monolith", isLearning: false },
+        { name: "DDD", isLearning: false }
       ]
     },
     {
       category: "DevOps & Cloud",
       skills: [
         { name: "Docker", isLearning: false },
+        { name: "Docker Compose", isLearning: false },
+        { name: "Celery", isLearning: false },
         { name: "CI/CD", isLearning: false },
         { name: "Vercel", isLearning: false },
         { name: "Render", isLearning: false }
@@ -176,13 +204,24 @@ const portfolioData = {
     {
       category: "AI & Tooling",
       skills: [
-        { name: "AI Automation", isLearning: false },
-        { name: "Prompt Engineering", isLearning: false }
+        { name: "AI-Assisted Development", isLearning: false },
+        { name: "Prompt Engineering", isLearning: false },
+        { name: "Automation", isLearning: false }
       ]
     }
   ],
 
   timeline: [
+    {
+      period: "2025 – Present",
+      type: "experience",
+      title: "Team CRM System — Lead Developer",
+      organization: "Internal CRM Platform (50–200 Users)",
+      location: "Algeria",
+      description:
+        "Architected and deployed full internal CRM platform from scratch: accounts, deals, tasks, Redis + Celery async workflows, and Docker Compose orchestration.",
+      tags: ["Django", "DRF", "PostgreSQL", "Redis", "Celery", "Docker Compose"]
+    },
     {
       period: "2025 – 2026",
       type: "project",
