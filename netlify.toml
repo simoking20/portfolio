@@ -1,0 +1,27 @@
+# Netlify Configuration for Hacini Mohammed Oussama Portfolio
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single-Page App (SPA) redirect rule
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Performance caching for static CSS & assets (allows revalidation on updates)
+[[headers]]
+  for = "/src/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"

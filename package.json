@@ -1,0 +1,27 @@
+{
+  "name": "portfolio-oussama",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Portfolio of Hacini Mohammed Oussama — Backend Software Engineer",
+  "scripts": {
+    "generate:cv": "node generate_cv.js",
+    "build": "node build.js",
+    "dev": "npx -y serve .",
+    "dev:https": "npx -y local-ssl-proxy --source 3443 --target 3000",
+    "start": "npx -y serve .",
+    "preview": "npx -y serve dist"
+  },
+  "keywords": [
+    "portfolio",
+    "vue",
+    "backend-engineer",
+    "python",
+    "django",
+    "fastapi",
+    "postgresql"
+  ],
+  "author": "Hacini Mohammed Oussama",
+  "dependencies": {
+    "docx": "^9.7.1"
+  }
+}
