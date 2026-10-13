@@ -47,11 +47,12 @@
             <span>GitHub</span>
           </a>
 
-          <button 
-            type="button"
+          <a 
+            :href="cvData?.downloadUrl || './Hacini_Mohammed_Oussama_CV.docx'" 
+            :download="cvData?.fileName || 'Hacini_Mohammed_Oussama_CV.docx'"
             class="btn btn-secondary"
-            title="Download CV"
-            @click="emit('download-cv')"
+            title="Download Word .docx CV"
+            @click="emit('download-cv', $event)"
           >
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -60,7 +61,7 @@
               <polyline points="9 15 12 18 15 15"></polyline>
             </svg>
             <span>CV (.docx)</span>
-          </button>
+          </a>
 
           <a :href="identity.socials.whatsapp" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -165,6 +166,10 @@ defineProps({
   identity: {
     type: Object,
     required: true
+  },
+  cvData: {
+    type: Object,
+    default: () => null
   }
 })
 

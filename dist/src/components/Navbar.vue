@@ -23,10 +23,11 @@
 
       <!-- Action CTA -->
       <div class="nav-actions desktop-only" style="gap: 12px;">
-        <button 
-          type="button"
+        <a 
+          :href="cvData?.downloadUrl || './Hacini_Mohammed_Oussama_CV.docx'" 
+          :download="cvData?.fileName || 'Hacini_Mohammed_Oussama_CV.docx'"
           class="btn btn-secondary btn-sm"
-          title="Download CV"
+          title="Download Word .docx CV"
           @click="onCvClick"
         >
           <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -36,7 +37,7 @@
             <polyline points="9 15 12 18 15 15"></polyline>
           </svg>
           <span>CV (.docx)</span>
-        </button>
+        </a>
         <a 
           :href="whatsappUrl" 
           target="_blank" 
@@ -75,13 +76,14 @@
         >
           {{ item.label }}
         </a>
-        <button 
-          type="button"
+        <a 
+          :href="cvData?.downloadUrl || './Hacini_Mohammed_Oussama_CV.docx'" 
+          :download="cvData?.fileName || 'Hacini_Mohammed_Oussama_CV.docx'"
           class="btn btn-secondary" 
           @click="onCvClick"
         >
           <span>Download CV (.docx)</span>
-        </button>
+        </a>
         <a 
           :href="whatsappUrl" 
           target="_blank" 
@@ -103,6 +105,10 @@ const props = defineProps({
   whatsappUrl: {
     type: String,
     required: true
+  },
+  cvData: {
+    type: Object,
+    default: () => null
   }
 })
 

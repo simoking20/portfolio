@@ -3,14 +3,16 @@
     <!-- Fixed Navigation -->
     <Navbar 
       :whatsapp-url="portfolioData.identity.socials.whatsapp" 
-      @download-cv="showComingSoon"
+      :cv-data="portfolioData.cv"
+      @download-cv="handleDownloadCv"
     />
 
     <!-- Main Content -->
     <main>
       <HeroSection 
         :identity="portfolioData.identity" 
-        @download-cv="showComingSoon"
+        :cv-data="portfolioData.cv"
+        @download-cv="handleDownloadCv"
       />
       <AboutSection :about="portfolioData.about" />
       <ProjectsSection :projects="portfolioData.projects" />
@@ -36,7 +38,7 @@
       </button>
     </transition>
 
-    <!-- Toast Notification: Coming Soon -->
+    <!-- Toast Notification: CV Download Status -->
     <transition name="toast">
       <div 
         v-if="toastVisible" 
@@ -45,13 +47,14 @@
         aria-live="polite"
       >
         <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="16" x2="12" y2="12"></line>
-          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <polyline points="9 15 12 18 15 15"></polyline>
         </svg>
         <div class="toast-body">
-          <p class="toast-title">This option is coming soon</p>
-          <p class="toast-desc">The downloadable Word CV is currently being prepared.</p>
+          <p class="toast-title">{{ toastTitle }}</p>
+          <p class="toast-desc">{{ toastDesc }}</p>
         </div>
         <button 
           class="toast-close" 
@@ -83,14 +86,46 @@ import Footer from './components/Footer.vue'
 
 const showFloatingTop = ref(false)
 const toastVisible = ref(false)
+const toastTitle = ref('CV Download Started')
+const toastDesc = ref('Your Word CV (.docx) is downloading.')
 let toastTimer = null
 
-const showComingSoon = () => {
+const handleDownloadCv = (event) => {
+  const cvData = portfolioData.cv || {}
+  const fileName = cvData.fileName || 'Hacini_Mohammed_Oussama_CV.docx'
+
+  toastTitle.value = 'CV Download Started'
+  toastDesc.value = `${fileName} (${cvData.fileSize || '11 KB'}) is ready.`
   toastVisible.value = true
   if (toastTimer) clearTimeout(toastTimer)
   toastTimer = setTimeout(() => {
     toastVisible.value = false
   }, 3500)
+
+  // Direct binary download from local database (base64)
+  if (cvData.base64 && typeof window !== 'undefined') {
+    try {
+      if (event && event.preventDefault) event.preventDefault()
+      const binaryString = atob(cvData.base64)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      const blob = new Blob([bytes], {
+        type: cvData.mimeType || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      })
+      const blobUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000)
+    } catch (err) {
+      console.warn('Fallback to native link download:', err)
+    }
+  }
 }
 
 const handleScroll = () => {
