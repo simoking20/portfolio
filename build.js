@@ -82,11 +82,16 @@ async function runBuild() {
     fs.writeFileSync(path.join(rootDir, '.nojekyll'), '');
     console.log('✓ Generated .nojekyll for GitHub Pages compatibility');
 
-    // 10. Copy robots.txt if present
+    // 10. Copy robots.txt & netlify.toml if present
     const robotsPath = path.join(rootDir, 'robots.txt');
     if (fs.existsSync(robotsPath)) {
       fs.copyFileSync(robotsPath, path.join(distDir, 'robots.txt'));
       console.log('✓ Copied robots.txt -> dist/robots.txt');
+    }
+    const netlifyPath = path.join(rootDir, 'netlify.toml');
+    if (fs.existsSync(netlifyPath)) {
+      fs.copyFileSync(netlifyPath, path.join(distDir, 'netlify.toml'));
+      console.log('✓ Copied netlify.toml -> dist/netlify.toml');
     }
 
     // 11. Sync CV base64 data into portfolio.js if sync script exists
@@ -98,6 +103,29 @@ async function runBuild() {
       }
     } catch (syncErr) {
       console.log('ℹ️ [Build] Notice: CV sync skipped or optional:', syncErr.message);
+    }
+
+    // 12. Create dist/dist fallback mirror for Netlify configurations where Base directory is set to dist
+    const nestedDist = path.join(distDir, 'dist');
+    if (!fs.existsSync(nestedDist)) {
+      fs.mkdirSync(nestedDist, { recursive: true });
+      fs.copyFileSync(path.join(distDir, 'index.html'), path.join(nestedDist, 'index.html'));
+      fs.copyFileSync(path.join(distDir, '_redirects'), path.join(nestedDist, '_redirects'));
+      fs.copyFileSync(path.join(distDir, '404.html'), path.join(nestedDist, '404.html'));
+      fs.cpSync(path.join(distDir, 'src'), path.join(nestedDist, 'src'), { recursive: true });
+      const cvDest = path.join(distDir, 'Hacini_Mohammed_Oussama_CV.docx');
+      if (fs.existsSync(cvDest)) {
+        fs.copyFileSync(cvDest, path.join(nestedDist, 'Hacini_Mohammed_Oussama_CV.docx'));
+      }
+      const cvAliasDest = path.join(distDir, 'cv.docx');
+      if (fs.existsSync(cvAliasDest)) {
+        fs.copyFileSync(cvAliasDest, path.join(nestedDist, 'cv.docx'));
+      }
+      const netlifyDest = path.join(distDir, 'netlify.toml');
+      if (fs.existsSync(netlifyDest)) {
+        fs.copyFileSync(netlifyDest, path.join(nestedDist, 'netlify.toml'));
+      }
+      console.log('✓ Created dist/dist fallback for Netlify nested-path compatibility');
     }
 
     console.log('🎉 [Build] Production build completed successfully! Output ready in dist/');
