@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hacini Mohammed Oussama | Backend Software Engineer</title>
+  
+  <!-- SEO & OpenGraph -->
+  <meta name="description" content="Portfolio of Hacini Mohammed Oussama — Backend Software Engineer from Ouargla, Algeria. Expert in Django, FastAPI, PostgreSQL, GraphQL, Docker, and distributed architectures." />
+  <meta name="keywords" content="Hacini Mohammed Oussama, Backend Engineer, Software Engineer, Ouargla, Algeria, Django, FastAPI, PostgreSQL, GraphQL, Docker" />
+  <meta name="author" content="Hacini Mohammed Oussama" />
+  <meta property="og:title" content="Hacini Mohammed Oussama | Backend Software Engineer" />
+  <meta property="og:description" content="Architecting resilient APIs, scalable microservices, and reliable database systems. Based in Ouargla, Algeria." />
+  <meta property="og:type" content="website" />
+
+  <!-- Enforce HTTPS Protocol & Secure Connections -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='https://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233B82F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'%3E%3C/polyline%3E%3Cpolyline points='8 6 2 12 8 18'%3E%3C/polyline%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Space Grotesk (UI) & JetBrains Mono (Code/Tags) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Core CSS Design System -->
+  <link rel="stylesheet" href="./src/style.css" />
+
+  <!-- Vue 3 Production Build -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Central Portfolio Data Source -->
+  <script src="./src/data/portfolio.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Fixed Navigation Bar -->
+    <header :class="['navbar', { 'navbar-scrolled': isScrolled }]">
+      <div class="container nav-inner">
+        <!-- Logo -->
+        <a href="#" class="nav-logo" @click.prevent="scrollToTop">
+          <span class="logo-bracket">&lt;</span>
+          <span class="logo-text">oussama</span>
+          <span class="logo-bracket">/&gt;</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-links desktop-only">
+          <a 
+            v-for="item in navItems" 
+            :key="item.id" 
+            :href="'#' + item.id"
+            :class="['nav-link', { active: activeSection === item.id }]"
+          >
+            {{ item.label }}
+          </a>
+        </nav>
+
+        <!-- Action CTA -->
+        <div class="nav-actions desktop-only" style="gap: 12px;">
+          <button 
+            type="button"
+            class="btn btn-secondary btn-sm"
+            title="Download CV"
+            @click="showComingSoon"
+          >
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <polyline points="9 15 12 18 15 15"></polyline>
+            </svg>
+            <span>CV (.docx)</span>
+          </button>
+          <a 
+            :href="data.identity.socials.whatsapp" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn btn-whatsapp btn-sm"
+          >
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button 
+          class="mobile-toggle" 
+          :class="{ open: mobileMenuOpen }" 
+          @click="toggleMobileMenu" 
+          aria-label="Toggle navigation menu"
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Drawer -->
+      <div :class="['mobile-drawer', { open: mobileMenuOpen }]">
+        <nav class="mobile-nav-links">
+          <a 
+            v-for="item in navItems" 
+            :key="item.id" 
+            :href="'#' + item.id"
+            :class="['mobile-nav-link', { active: activeSection === item.id }]"
+            @click="closeMobileMenu"
+          >
+            {{ item.label }}
+          </a>
+          <button 
+            type="button"
+            class="btn btn-secondary" 
+            @click="showComingSoon"
+          >
+            <span>Download CV (.docx)</span>
+          </button>
+          <a 
+            :href="data.identity.socials.whatsapp" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn btn-whatsapp" 
+            @click="closeMobileMenu"
+          >
+            <span>Contact via WhatsApp</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation Backdrop Overlay -->
+    <div v-if="mobileMenuOpen" class="mobile-backdrop" @click="closeMobileMenu"></div>
+
+    <!-- Main Content Area -->
+    <main>
+      <!-- HERO SECTION -->
+      <section class="hero-section" id="hero">
+        <div class="ambient-glow glow-blue"></div>
+        <div class="ambient-glow glow-emerald"></div>
+
+        <div class="container hero-container">
+          <div class="hero-content">
+            <!-- Availability Pill -->
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              <span class="status-text">{{ data.identity.availability }}</span>
+            </div>
+
+            <!-- Name and Title -->
+            <h1 class="hero-name">{{ data.identity.name }}</h1>
+            <div class="hero-title-wrapper">
+              <span class="hero-title">{{ data.identity.title }}</span>
+              <span class="location-badge">
+                <svg class="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ data.identity.location }}
+              </span>
+            </div>
+
+            <p class="hero-tagline">
+              {{ data.identity.tagline }} Master's candidate in Computer Science at Kasdi Merbah University Ouargla, with a proven track record architecting robust microservices, GraphQL &amp; REST APIs, and database performance tuning.
+            </p>
+
+            <!-- Hero Action Buttons (LinkedIn, GitHub, WhatsApp) -->
+            <div class="hero-actions">
+              <a :href="data.identity.socials.linkedin" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+                <span>LinkedIn</span>
+              </a>
+
+              <a :href="data.identity.socials.github" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                </svg>
+                <span>GitHub</span>
+              </a>
+
+              <button 
+                type="button"
+                class="btn btn-secondary"
+                title="Download CV"
+                @click="showComingSoon"
+              >
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <polyline points="9 15 12 18 15 15"></polyline>
+                </svg>
+                <span>CV (.docx)</span>
+              </button>
+
+              <a :href="data.identity.socials.whatsapp" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                </svg>
+                <span>WhatsApp</span>
+              </a>
+            </div>
+
+            <!-- Fast Section Jumps -->
+            <div class="hero-quick-links">
+              <a href="#projects" class="quick-link">
+                <span>Explore Projects</span>
+                <svg class="icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <span class="dot-divider">•</span>
+              <a href="#experience" class="quick-link"><span>Timeline</span></a>
+              <span class="dot-divider">•</span>
+              <a href="#skills" class="quick-link"><span>Tech Stack</span></a>
+            </div>
+          </div>
+
+          <!-- Backend Terminal Widget -->
+          <div class="hero-terminal-wrapper">
+            <div class="terminal-card">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <div class="terminal-title mono">backend@oussama-node: ~</div>
+                <div class="terminal-badge mono">STATUS: 200 OK</div>
+              </div>
+              <div class="terminal-body mono">
+                <div class="code-line">
+                  <span class="token-comment"># Production backend service configuration</span>
+                </div>
+                <div class="code-line">
+                  <span class="token-keyword">from</span> backend.core <span class="token-keyword">import</span> FastAPI, GraphQLRouter
+                </div>
+                <div class="code-line">
+                  <span class="token-keyword">from</span> databases <span class="token-keyword">import</span> PostgreSQLCluster
+                </div>
+                <div class="code-line empty">&nbsp;</div>
+                <div class="code-line">
+                  <span class="token-def">app</span> = FastAPI(title=<span class="token-string">"PADAR &amp; Enterprise Services"</span>)
+                </div>
+                <div class="code-line">
+                  <span class="token-def">db</span> = PostgreSQLCluster.pool(min_conn=<span class="token-number">10</span>, max_conn=<span class="token-number">100</span>)
+                </div>
+                <div class="code-line empty">&nbsp;</div>
+                <div class="code-line">
+                  <span class="token-decorator">@app.get</span>(<span class="token-string">"/api/v1/health"</span>)
+                </div>
+                <div class="code-line">
+                  <span class="token-keyword">async def</span> <span class="token-function">health_check</span>():
+                </div>
+                <div class="code-line indent">
+                  <span class="token-keyword">return</span> {
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"engineer"</span>: <span class="token-string">"Hacini Mohammed Oussama"</span>,
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"role"</span>: <span class="token-string">"Backend Software Engineer"</span>,
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"location"</span>: <span class="token-string">"Ouargla, Algeria"</span>,
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"active_services"</span>: [<span class="token-string">"PADAR"</span>, <span class="token-string">"LKVC"</span>, <span class="token-string">"Rafikni"</span>],
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"latency_ms"</span>: <span class="token-number">1.42</span>,
+                </div>
+                <div class="code-line indent-2">
+                  <span class="token-key">"db_status"</span>: <span class="token-string text-green">"CONNECTED"</span>
+                </div>
+                <div class="code-line indent">
+                  }
+                </div>
+                <div class="terminal-footer-line">
+                  <span class="prompt-sign">$</span> <span class="terminal-cursor"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT SECTION -->
+      <section class="section about-section" id="about">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag"><span>// Profile &amp; Background</span></div>
+            <h2 class="section-title">About Me</h2>
+            <p class="section-desc">
+              Building resilient systems and turning complex business requirements into fast, dependable backend services.
+            </p>
+          </div>
+
+          <div class="about-grid">
+            <div class="bio-column">
+              <div class="bio-card">
+                <h3 class="bio-headline">
+                  Engineering high-concurrency architectures with a passion for clean APIs and databases.
+                </h3>
+                <div class="bio-paragraphs">
+                  <p v-for="(paragraph, index) in data.about.bio" :key="index">
+                    {{ paragraph }}
+                  </p>
+                </div>
+
+                <div class="edu-highlight">
+                  <div class="edu-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                      <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                  </div>
+                  <div class="edu-info">
+                    <span class="edu-label mono">Kasdi Merbah University Ouargla</span>
+                    <p class="edu-detail">Master's (2024–2026) &amp; Licence (2021–2024) in Computer Science</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats & Spoken Languages -->
+            <div class="stats-languages-column">
+              <div class="stats-grid">
+                <div v-for="(stat, index) in data.about.stats" :key="index" class="stat-card">
+                  <div class="stat-value mono">{{ stat.value }}</div>
+                  <div class="stat-label">{{ stat.label }}</div>
+                  <div class="stat-subtext">{{ stat.subtext }}</div>
+                </div>
+              </div>
+
+              <div class="languages-card">
+                <h4 class="languages-title"><span class="mono title-tag">#</span> Spoken Languages</h4>
+                <div class="languages-list">
+                  <div v-for="lang in data.about.spokenLanguages" :key="lang.name" class="language-row">
+                    <div class="language-info">
+                      <span class="lang-flag">{{ lang.flag }}</span>
+                      <span class="lang-name">{{ lang.name }}</span>
+                      <span class="lang-level mono">{{ lang.level }}</span>
+                    </div>
+                    <div class="lang-progress-track">
+                      <div class="lang-progress-bar" :style="{ width: lang.proficiency + '%' }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS SECTION -->
+      <section class="section projects-section" id="projects">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag"><span>// Featured Works</span></div>
+            <h2 class="section-title">Production Systems &amp; Projects</h2>
+            <p class="section-desc">
+              Backend infrastructure, enterprise platforms, and startup products engineered for reliability, security, and scale.
+            </p>
+          </div>
+
+          <div class="projects-grid">
+            <article 
+              v-for="project in data.projects" 
+              :key="project.id"
+              :class="['project-card', { 'flagship-card': project.isFlagship }]"
+            >
+              <div class="project-header">
+                <div class="project-badge-row">
+                  <span class="project-badge mono">{{ project.badge }}</span>
+                  <span class="project-period mono">{{ project.period }}</span>
+                </div>
+                <h3 class="project-title">{{ project.title }}</h3>
+                <div class="project-role mono">
+                  <span class="role-marker">›</span> {{ project.role }}
+                </div>
+              </div>
+
+              <p class="project-description">{{ project.description }}</p>
+
+              <div class="project-highlights">
+                <h4 class="highlights-title mono">Key Engineering Achievements</h4>
+                <ul class="highlights-list">
+                  <li v-for="(highlight, idx) in project.highlights" :key="idx">
+                    <span class="bullet">▹</span>
+                    <span>{{ highlight }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="project-footer">
+                <div class="stack-chips">
+                  <span v-for="tech in project.stack" :key="tech" class="stack-chip mono">
+                    {{ tech }}
+                  </span>
+                </div>
+
+                <div class="project-actions">
+                  <a 
+                    :href="project.links.github" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="btn-project-link mono"
+                    title="View on GitHub"
+                  >
+                    <svg class="icon-link" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                    </svg>
+                    <span>Code Repository</span>
+                    <svg class="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SKILLS SECTION -->
+      <section class="section skills-section" id="skills">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag"><span>// Technical Expertise</span></div>
+            <h2 class="section-title">Skills &amp; Technologies</h2>
+            <p class="section-desc">
+              Core backend technologies, database engines, distributed system patterns, and cloud tools I leverage.
+            </p>
+
+            <div class="learning-legend">
+              <span class="legend-chip chip-learning mono">
+                Ruby on Rails <span class="star-marker">✦</span>
+              </span>
+              <span class="legend-text">
+                Items highlighted in emerald with <strong class="text-learning">✦</strong> indicate technologies actively being mastered.
+              </span>
+            </div>
+          </div>
+
+          <div class="skills-categories-grid">
+            <div 
+              v-for="cat in data.skillCategories" 
+              :key="cat.category" 
+              class="skill-category-card"
+            >
+              <div class="category-header">
+                <div class="category-icon-box">
+                  <svg v-if="cat.category === 'Languages'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                  <svg v-else-if="cat.category === 'Frameworks'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                  </svg>
+                  <svg v-else-if="cat.category === 'Databases'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                  </svg>
+                  <svg v-else-if="cat.category === 'APIs & Auth'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <svg v-else-if="cat.category === 'Architecture'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                  </svg>
+                  <svg v-else-if="cat.category.includes('DevOps')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                  </svg>
+                  <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"></path>
+                  </svg>
+                </div>
+                <h3 class="category-name">{{ cat.category }}</h3>
+              </div>
+
+              <div class="skills-chips-wrapper">
+                <span 
+                  v-for="skill in cat.skills" 
+                  :key="skill.name"
+                  :class="['skill-chip mono', { 'chip-learning': skill.isLearning }]"
+                >
+                  {{ skill.name }}
+                  <span v-if="skill.isLearning" class="star-marker">✦</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE & EDUCATION TIMELINE -->
+      <section class="section timeline-section" id="experience">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag"><span>// Journey &amp; Education</span></div>
+            <h2 class="section-title">Experience &amp; Academic Timeline</h2>
+            <p class="section-desc">
+              Chronological progression across formal computer science degrees, commercial startup ventures, and graduation engineering.
+            </p>
+          </div>
+
+          <div class="timeline-container">
+            <div class="timeline-line"></div>
+
+            <div 
+              v-for="(item, index) in data.timeline" 
+              :key="index"
+              :class="['timeline-item', item.type]"
+            >
+              <div class="timeline-marker">
+                <div class="marker-dot"></div>
+              </div>
+
+              <div class="timeline-content-card">
+                <div class="timeline-header-meta">
+                  <span class="timeline-period mono">{{ item.period }}</span>
+                  <span :class="['timeline-badge mono', item.type]">
+                    {{ item.type === 'education' ? 'Academic' : (item.type === 'project' ? 'Grad Project' : 'Startup') }}
+                  </span>
+                </div>
+
+                <h3 class="timeline-role-title">{{ item.title }}</h3>
+                
+                <div class="timeline-org-row">
+                  <span class="timeline-org">{{ item.organization }}</span>
+                  <span class="dot-sep">•</span>
+                  <span class="timeline-loc">{{ item.location }}</span>
+                </div>
+
+                <p class="timeline-desc">{{ item.description }}</p>
+
+                <div class="timeline-tags">
+                  <span v-for="tag in item.tags" :key="tag" class="timeline-tag mono">
+                    {{ tag }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT SECTION -->
+      <section class="section contact-section" id="contact">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-tag"><span>// Get In Touch</span></div>
+            <h2 class="section-title">Let's Connect &amp; Collaborate</h2>
+            <p class="section-desc">
+              Whether you have a backend engineering opening, want to discuss database architecture, or want to collaborate on a product.
+            </p>
+          </div>
+
+          <div class="contact-card-container">
+            <!-- WhatsApp Spotlight Card -->
+            <div class="contact-main-card">
+              <div class="main-card-glow"></div>
+              <div class="main-card-inner">
+                <div class="whatsapp-badge mono">DIRECT INSTANT CHAT</div>
+                <h3 class="main-card-title">Message Me on WhatsApp</h3>
+                <p class="main-card-desc">
+                  For fast inquiries, project consultations, or engineering role discussions, WhatsApp is the fastest channel to reach me directly.
+                </p>
+
+                <div class="main-card-actions">
+                  <a 
+                    :href="data.identity.socials.whatsapp" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="btn btn-whatsapp"
+                  >
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                    </svg>
+                    <span>Open WhatsApp Chat</span>
+                  </a>
+
+                  <button @click="copyWhatsApp" class="btn btn-secondary mono">
+                    <span>{{ copied ? '✓ Copied Link' : 'Copy Link' }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Channels Grid -->
+            <div class="channels-grid">
+              <a 
+                :href="data.identity.socials.linkedin" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="channel-box"
+              >
+                <div class="channel-icon-wrapper linkedin">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                  </svg>
+                </div>
+                <div class="channel-content">
+                  <div class="channel-title">LinkedIn Profile</div>
+                  <div class="channel-subtitle mono">mohammed-oussama-hacini</div>
+                </div>
+                <div class="channel-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"></path>
+                  </svg>
+                </div>
+              </a>
+
+              <a 
+                :href="data.identity.socials.github" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="channel-box"
+              >
+                <div class="channel-icon-wrapper github">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                  </svg>
+                </div>
+                <div class="channel-content">
+                  <div class="channel-title">GitHub Profile</div>
+                  <div class="channel-subtitle mono">@simoking20</div>
+                </div>
+                <div class="channel-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"></path>
+                  </svg>
+                </div>
+              </a>
+
+              <div class="channel-box location-box">
+                <div class="channel-icon-wrapper location">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="channel-content">
+                  <div class="channel-title">Location &amp; Timezone</div>
+                  <div class="channel-subtitle mono">{{ data.identity.location }} (UTC+1)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-branding">
+          <a href="#" class="footer-logo mono" @click.prevent="scrollToTop">
+            <span class="bracket">&lt;</span>
+            <span class="text">oussama</span>
+            <span class="bracket">/&gt;</span>
+          </a>
+          <p class="footer-engineer">{{ data.identity.name }}</p>
+          <p class="footer-location mono">📍 {{ data.identity.location }}</p>
+        </div>
+
+        <div class="footer-nav">
+          <span class="nav-title mono">// Direct Channels</span>
+          <a :href="data.identity.socials.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a :href="data.identity.socials.github" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a :href="data.identity.socials.whatsapp" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn-top mono" @click="scrollToTop" title="Back to Top">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            <span>Top</span>
+          </button>
+          <div class="footer-copy mono">
+            &copy; 2026 • Built with Vue 3 &amp; Clean CSS
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Floating Scroll-To-Top Button -->
+    <button 
+      v-show="showFloatingTop" 
+      class="floating-top-btn" 
+      @click="scrollToTop" 
+      aria-label="Scroll to top"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <!-- Toast Notification: Coming Soon -->
+    <transition name="toast">
+      <div 
+        v-if="toastVisible" 
+        class="toast-notification" 
+        role="status" 
+        aria-live="polite"
+      >
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <div class="toast-body">
+          <p class="toast-title">This option is coming soon</p>
+          <p class="toast-desc">The downloadable Word CV is currently being prepared.</p>
+        </div>
+        <button 
+          class="toast-close" 
+          @click="toastVisible = false" 
+          aria-label="Close notification"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </transition>
+  </div>
+
+  <!-- Vue 3 Application Script -->
+  <script>
+    const { createApp, ref, onMounted, onUnmounted } = Vue;
+
+    const app = createApp({
+      setup() {
+        const data = window.portfolioData || {};
+        const isScrolled = ref(false);
+        const mobileMenuOpen = ref(false);
+        const showFloatingTop = ref(false);
+        const activeSection = ref('hero');
+        const copied = ref(false);
+        const toastVisible = ref(false);
+        let toastTimer = null;
+
+        const navItems = [
+          { label: 'About', id: 'about' },
+          { label: 'Projects', id: 'projects' },
+          { label: 'Skills', id: 'skills' },
+          { label: 'Experience', id: 'experience' },
+          { label: 'Contact', id: 'contact' }
+        ];
+
+        const handleScroll = () => {
+          const scrollY = window.scrollY;
+          isScrolled.value = scrollY > 20;
+          showFloatingTop.value = scrollY > 400;
+
+          const sections = ['about', 'projects', 'skills', 'experience', 'contact'];
+          const scrollPosition = scrollY + 160;
+
+          for (const sectionId of sections) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPosition >= top && scrollPosition < top + height) {
+                activeSection.value = sectionId;
+                return;
+              }
+            }
+          }
+          if (scrollY < 200) {
+            activeSection.value = 'hero';
+          }
+        };
+
+        const toggleMobileMenu = () => {
+          mobileMenuOpen.value = !mobileMenuOpen.value;
+        };
+
+        const closeMobileMenu = () => {
+          mobileMenuOpen.value = false;
+        };
+
+        const scrollToTop = () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          closeMobileMenu();
+        };
+
+        const showComingSoon = () => {
+          closeMobileMenu();
+          toastVisible.value = true;
+          if (toastTimer) clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => {
+            toastVisible.value = false;
+          }, 3500);
+        };
+
+        const copyWhatsApp = async () => {
+          try {
+            if (data.identity && data.identity.socials && data.identity.socials.whatsapp) {
+              await navigator.clipboard.writeText(data.identity.socials.whatsapp);
+              copied.value = true;
+              setTimeout(() => {
+                copied.value = false;
+              }, 2200);
+            }
+          } catch (err) {
+            console.error('Copy failed:', err);
+          }
+        };
+
+        onMounted(() => {
+          window.addEventListener('scroll', handleScroll, { passive: true });
+        });
+
+        onUnmounted(() => {
+          window.removeEventListener('scroll', handleScroll);
+          if (toastTimer) clearTimeout(toastTimer);
+        });
+
+        return {
+          data,
+          navItems,
+          isScrolled,
+          mobileMenuOpen,
+          showFloatingTop,
+          activeSection,
+          copied,
+          toastVisible,
+          toggleMobileMenu,
+          closeMobileMenu,
+          scrollToTop,
+          showComingSoon,
+          copyWhatsApp
+        };
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
