@@ -123,11 +123,41 @@ const copied = ref(false)
 
 const copyWhatsApp = async () => {
   try {
-    await navigator.clipboard.writeText(props.identity.socials.whatsapp)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2400)
+    const textToCopy = props.identity.socials.whatsapp
+    let copiedSuccessfully = false
+
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(textToCopy)
+        copiedSuccessfully = true
+      } catch (clipErr) {
+        console.warn('navigator.clipboard failed, using fallback:', clipErr)
+      }
+    }
+
+    if (!copiedSuccessfully) {
+      const textArea = document.createElement('textarea')
+      textArea.value = textToCopy
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        copiedSuccessfully = document.execCommand('copy')
+      } catch (execErr) {
+        console.error('execCommand copy failed:', execErr)
+      }
+      document.body.removeChild(textArea)
+    }
+
+    if (copiedSuccessfully) {
+      copied.value = true
+      setTimeout(() => {
+        copied.value = false
+      }, 2400)
+    }
   } catch (err) {
     console.error('Failed to copy', err)
   }

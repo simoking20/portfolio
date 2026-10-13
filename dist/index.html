@@ -852,11 +852,42 @@
         const copyWhatsApp = async () => {
           try {
             if (data.identity && data.identity.socials && data.identity.socials.whatsapp) {
-              await navigator.clipboard.writeText(data.identity.socials.whatsapp);
-              copied.value = true;
-              setTimeout(() => {
-                copied.value = false;
-              }, 2200);
+              const textToCopy = data.identity.socials.whatsapp;
+              let copiedSuccessfully = false;
+
+              if (navigator.clipboard && window.isSecureContext) {
+                try {
+                  await navigator.clipboard.writeText(textToCopy);
+                  copiedSuccessfully = true;
+                } catch (clipErr) {
+                  console.warn('navigator.clipboard failed, using fallback:', clipErr);
+                }
+              }
+
+              // Fallback for HTTP local network (LAN) access where navigator.clipboard is restricted
+              if (!copiedSuccessfully) {
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                  copiedSuccessfully = document.execCommand('copy');
+                } catch (execErr) {
+                  console.error('execCommand copy failed:', execErr);
+                }
+                document.body.removeChild(textArea);
+              }
+
+              if (copiedSuccessfully) {
+                copied.value = true;
+                setTimeout(() => {
+                  copied.value = false;
+                }, 2200);
+              }
             }
           } catch (err) {
             console.error('Copy failed:', err);
