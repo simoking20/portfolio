@@ -58,6 +58,11 @@ async function runBuild() {
       fs.copyFileSync(cvFile, path.join(distDir, 'Hacini_Mohammed_Oussama_CV.docx'));
       console.log('✓ Copied Hacini_Mohammed_Oussama_CV.docx -> dist/');
     }
+    const cvAlias = path.join(rootDir, 'cv.docx');
+    if (fs.existsSync(cvAlias)) {
+      fs.copyFileSync(cvAlias, path.join(distDir, 'cv.docx'));
+      console.log('✓ Copied cv.docx -> dist/');
+    }
 
     // 7. Copy or generate Netlify / SPA _redirects file
     const rootRedirects = path.join(rootDir, '_redirects');
@@ -67,6 +72,33 @@ async function runBuild() {
       fs.writeFileSync(path.join(distDir, '_redirects'), '/*    /index.html   200\n');
     }
     console.log('✓ Generated dist/_redirects for SPA routing');
+
+    // 8. Generate 404.html fallback for GitHub Pages, Surge & static hosts
+    fs.copyFileSync(indexPath, path.join(distDir, '404.html'));
+    console.log('✓ Generated dist/404.html for static fallback routing');
+
+    // 9. Generate .nojekyll file for GitHub Pages (prevents ignoring _redirects)
+    fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
+    fs.writeFileSync(path.join(rootDir, '.nojekyll'), '');
+    console.log('✓ Generated .nojekyll for GitHub Pages compatibility');
+
+    // 10. Copy robots.txt if present
+    const robotsPath = path.join(rootDir, 'robots.txt');
+    if (fs.existsSync(robotsPath)) {
+      fs.copyFileSync(robotsPath, path.join(distDir, 'robots.txt'));
+      console.log('✓ Copied robots.txt -> dist/robots.txt');
+    }
+
+    // 11. Sync CV base64 data into portfolio.js if sync script exists
+    try {
+      const syncScript = path.join(rootDir, 'sync_cv.js');
+      if (fs.existsSync(syncScript)) {
+        require(syncScript);
+        console.log('✓ Synced CV data & base64 into portfolio.js');
+      }
+    } catch (syncErr) {
+      console.log('ℹ️ [Build] Notice: CV sync skipped or optional:', syncErr.message);
+    }
 
     console.log('🎉 [Build] Production build completed successfully! Output ready in dist/');
   } catch (error) {

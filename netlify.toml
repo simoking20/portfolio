@@ -1,9 +1,8 @@
 # Netlify Configuration for Hacini Mohammed Oussama Portfolio
 
 [build]
-   base = "dist"
   command = "npm run build"
-  publish = "."
+  publish = "dist"
 
 # Single-Page App (SPA) redirect rule
 [[redirects]]

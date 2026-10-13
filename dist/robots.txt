@@ -1,0 +1,5 @@
+# robots.txt for Hacini Mohammed Oussama Portfolio
+User-agent: *
+Allow: /
+
+Sitemap: https://hacini-oussama.vercel.app/sitemap.xml
